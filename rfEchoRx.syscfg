@@ -1,0 +1,76 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --board "/ti/boards/LP_EM_CC1354P10_1" --rtos "freertos" --product "simplelink_cc13xx_cc26xx_sdk@7.41.00.17"
+ * @versions {"tool":"1.18.1+3343"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const FreeRTOS = scripting.addModule("/freertos/FreeRTOS");
+const CCFG     = scripting.addModule("/ti/devices/CCFG");
+const custom   = scripting.addModule("/ti/devices/radioconfig/custom");
+const rfdesign = scripting.addModule("/ti/devices/radioconfig/rfdesign");
+const GPIO     = scripting.addModule("/ti/drivers/GPIO");
+const GPIO1    = GPIO.addInstance();
+const GPIO2    = GPIO.addInstance();
+const GPIO3    = GPIO.addInstance();
+const I2C      = scripting.addModule("/ti/drivers/I2C", {}, false);
+const I2C1     = I2C.addInstance();
+const RF       = scripting.addModule("/ti/drivers/RF");
+const UART2    = scripting.addModule("/ti/drivers/UART2", {}, false);
+const UART21   = UART2.addInstance();
+const Settings = scripting.addModule("/ti/posix/freertos/Settings");
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+CCFG.xoscCapArray            = true;
+CCFG.xoscCapArrayDelta       = 0xD5;
+CCFG.enableBootloader        = true;
+CCFG.dioBootloaderBackdoor   = 15;
+CCFG.levelBootloaderBackdoor = "Active low";
+CCFG.ccfgTemplate.$name      = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+
+custom.prop8                                              = ["custom868"];
+custom.radioConfigcustom868.$name                         = "RF_Custom_Setting";
+custom.radioConfigcustom868.phyType868                    = "2gfsk50kbps";
+custom.radioConfigcustom868.codeExportConfig.$name        = "ti_devices_radioconfig_code_export_param0";
+custom.radioConfigcustom868.codeExportConfig.symGenMethod = "Legacy";
+
+rfdesign.rfDesign = "LP_EM_CC1354P10_1";
+
+GPIO1.$hardware = system.deviceData.board.components.LED_RED;
+GPIO1.$name     = "CONFIG_GPIO_RLED";
+
+GPIO2.$hardware = system.deviceData.board.components.LED_GREEN;
+GPIO2.$name     = "CONFIG_GPIO_GLED";
+
+GPIO3.$hardware = system.deviceData.board.components["BTN-1"];
+GPIO3.$name     = "CONFIG_GPIO_BUTTON_0";
+
+I2C1.$name = "CONFIG_I2C_1";
+
+RF.$hardware = system.deviceData.board.components["SKY13317-373LF"];
+
+UART21.$name     = "CONFIG_UART2_0";
+UART21.$hardware = system.deviceData.board.components.XDS110UART;
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+GPIO1.gpioPin.$suggestSolution     = "DIO_6";
+GPIO2.gpioPin.$suggestSolution     = "DIO_7";
+GPIO3.gpioPin.$suggestSolution     = "boosterpack.11";
+I2C1.i2c.$suggestSolution          = "I2C0";
+I2C1.i2c.sdaPin.$suggestSolution   = "boosterpack.10";
+I2C1.i2c.sclPin.$suggestSolution   = "boosterpack.9";
+RF.rfAntennaPin0.$suggestSolution  = "DIO_34";
+RF.rfAntennaPin1.$suggestSolution  = "DIO_3";
+RF.rfAntennaPin2.$suggestSolution  = "DIO_35";
+UART21.uart.$suggestSolution       = "UART0";
+UART21.uart.txPin.$suggestSolution = "boosterpack.4";
+UART21.uart.rxPin.$suggestSolution = "boosterpack.3";
